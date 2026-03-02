@@ -5,6 +5,8 @@ import { DecisionCenter } from "./components/DecisionCenter";
 import { GovernanceHub } from "./components/GovernanceHub";
 import { ValuesEngine } from "./components/ValuesEngine";
 import { AuditExplorer } from "./components/AuditExplorer";
+import { EthicsDemo } from "./components/EthicsDemo";
+import { PolicyRegistry } from "./components/PolicyRegistry";
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +18,8 @@ export const router = createBrowserRouter([
       { path: "governance", Component: GovernanceHub },
       { path: "values-engine", Component: ValuesEngine },
       { path: "audit", Component: AuditExplorer },
+      { path: "demo", Component: EthicsDemo },
+      { path: "policy-registry", Component: PolicyRegistry },
     ],
   },
 ]);

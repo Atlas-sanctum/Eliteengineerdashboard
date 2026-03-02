@@ -1,15 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { mockDecisions, ethicsPrinciples } from "../data/mockData";
 import { DecisionRecord } from "../types";
 import { FileSearch, Download, Filter, Calendar, User, Shield, ExternalLink } from "lucide-react";
+import { getStoredDecisions } from "../services/ethicsEngine";
 
 export function AuditExplorer() {
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterPrinciple, setFilterPrinciple] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedForExport, setSelectedForExport] = useState<string[]>([]);
+  const [storedDecisions, setStoredDecisions] = useState<any[]>([]);
 
-  const filteredDecisions = mockDecisions.filter((decision) => {
+  // Load stored decisions from localStorage
+  useEffect(() => {
+    const stored = getStoredDecisions();
+    setStoredDecisions(stored);
+  }, []);
+
+  // Combine mock decisions with stored decisions
+  const allDecisions = [
+    ...storedDecisions.map((stored) => ({
+      decisionId: stored.receiptId || "N/A",
+      timestamp: stored.timestamp,
+      actor: stored.actor,
+      actionType: stored.actionType,
+      status: stored.decision === "allow" ? "approved" : stored.decision === "deny" ? "denied" : "escalated",
+      policyVersion: stored.policyVersion,
+      principlesApplied: stored.principlesApplied || [],
+      constraintsTriggered: stored.constraintsTriggered || [],
+      riskScore: stored.riskLevel === "low" ? 2 : stored.riskLevel === "medium" ? 5 : stored.riskLevel === "high" ? 8 : 9.5,
+      harmEstimate: stored.reason,
+      evidenceRefs: stored.evidence || [],
+      counterfactuals: [],
+      appealRoute: "Standard appeal process",
+      description: stored.payloadSummary || "Decision from live demo",
+    })),
+    ...mockDecisions,
+  ];
+
+  const filteredDecisions = allDecisions.filter((decision) => {
     const matchesStatus = filterStatus === "all" || decision.status === filterStatus;
     const matchesPrinciple =
       filterPrinciple === "all" ||
@@ -30,7 +59,7 @@ export function AuditExplorer() {
   };
 
   const exportSelected = () => {
-    const dataToExport = mockDecisions.filter((d) => selectedForExport.includes(d.decisionId));
+    const dataToExport = allDecisions.filter((d) => selectedForExport.includes(d.decisionId));
     const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -53,24 +82,24 @@ export function AuditExplorer() {
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
           <p className="text-sm text-slate-600">Total Decisions</p>
-          <p className="text-2xl font-bold text-slate-900 mt-1">{mockDecisions.length}</p>
+          <p className="text-2xl font-bold text-slate-900 mt-1">{allDecisions.length}</p>
         </div>
         <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
           <p className="text-sm text-slate-600">Approved</p>
           <p className="text-2xl font-bold text-green-600 mt-1">
-            {mockDecisions.filter((d) => d.status === "approved").length}
+            {allDecisions.filter((d) => d.status === "approved").length}
           </p>
         </div>
         <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
           <p className="text-sm text-slate-600">Escalated</p>
           <p className="text-2xl font-bold text-orange-600 mt-1">
-            {mockDecisions.filter((d) => d.status === "escalated").length}
+            {allDecisions.filter((d) => d.status === "escalated").length}
           </p>
         </div>
         <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
           <p className="text-sm text-slate-600">Under Review</p>
           <p className="text-2xl font-bold text-amber-600 mt-1">
-            {mockDecisions.filter((d) => d.status === "needs_review").length}
+            {allDecisions.filter((d) => d.status === "needs_review").length}
           </p>
         </div>
       </div>

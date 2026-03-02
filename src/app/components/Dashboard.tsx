@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Shield, Vote, Cpu, TrendingUp, AlertTriangle, CheckCircle, Clock } from "lucide-react";
+import { Shield, Vote, Cpu, TrendingUp, AlertTriangle, CheckCircle, Clock, PlayCircle, Zap } from "lucide-react";
 
 export function Dashboard() {
   return (
@@ -10,6 +10,41 @@ export function Dashboard() {
           Real-time monitoring of ethical AI governance, policy enforcement, and community participation.
         </p>
       </div>
+
+      {/* NEW: Live Demo Highlight */}
+      <Link
+        to="/demo"
+        className="block bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-start space-x-4">
+            <div className="bg-white rounded-lg p-3">
+              <PlayCircle className="h-8 w-8 text-cyan-600" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white mb-2">✨ Ethics Core Vertical Slice Demo</h2>
+              <p className="text-cyan-50 text-sm mb-3">
+                Live demonstration of the complete ethics enforcement flow: Preflight checks → Decision receipts → Appeal paths → Audit trail
+              </p>
+              <div className="flex items-center space-x-4 text-sm">
+                <span className="flex items-center text-white">
+                  <Zap className="h-4 w-4 mr-1" />
+                  Real-time validation
+                </span>
+                <span className="flex items-center text-white">
+                  <Shield className="h-4 w-4 mr-1" />
+                  Policy Pack v1.8.2
+                </span>
+                <span className="flex items-center text-white">
+                  <CheckCircle className="h-4 w-4 mr-1" />
+                  Full audit trail
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="text-white text-4xl">→</div>
+        </div>
+      </Link>
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

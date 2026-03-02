@@ -1,15 +1,17 @@
 import { Outlet, Link, useLocation } from "react-router";
-import { Shield, FileSearch, Vote, Cpu, Activity } from "lucide-react";
+import { Shield, FileSearch, Vote, Cpu, Activity, PlayCircle, FileText } from "lucide-react";
 
 export function Root() {
   const location = useLocation();
 
   const navItems = [
     { path: "/", label: "Dashboard", icon: Activity },
+    { path: "/demo", label: "Live Demo", icon: PlayCircle },
     { path: "/decisions", label: "Decision Center", icon: Shield },
     { path: "/governance", label: "Governance", icon: Vote },
     { path: "/values-engine", label: "Values Engine", icon: Cpu },
     { path: "/audit", label: "Audit Explorer", icon: FileSearch },
+    { path: "/policy-registry", label: "Policy Registry", icon: FileText },
   ];
 
   return (
